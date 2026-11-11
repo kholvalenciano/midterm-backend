@@ -3,13 +3,22 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-@Controller('users')
+@Controller(['users', 'auth'])
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post(['', 'register'])
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @Post('login')
+  login(@Body() body: any) {
+    return {
+      accessToken: 'jwt-session-token-' + Date.now(),
+      refreshToken: 'jwt-refresh-token-' + Date.now(),
+      user: body,
+    };
   }
 
   @Get()
